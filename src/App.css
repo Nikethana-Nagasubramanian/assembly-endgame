@@ -14,10 +14,18 @@ body {
   justify-content: center;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
 header {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   text-align: center;
   gap: 4px;
 }
@@ -47,7 +55,7 @@ header > p {
   text-align: center;
   padding: 6px;
   border-radius: 4px;
-  margin-top: 12px;
+  margin: 12px 0px;
 }
 
 .status-card > h6 {
@@ -58,4 +66,77 @@ header > p {
 .status-card > p {
   font-size: 16px;
   font-weight: 500;
+}
+
+.language-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  max-width: 480px;
+}
+
+span.language {
+  border-radius: 5px;
+  padding: 4.5px;
+}
+
+.guessWord {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+}
+
+span.each-letter {
+  width: 40px;
+  height: fit-content;
+  padding: 8px;
+  font-size: 20px;
+  font-weight: 500;
+  border-bottom: 1px solid #F9F4DA;
+  background-color:#323232;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.keyboard {
+  max-width: 480px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.keyboard > button {
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  background-color: #FCBA29;
+  border: 1px solid #D7D7D7;
+  text-transform: capitalize;
+  border-radius: 2px;
+  cursor: pointer; 
+}
+
+
+button.new-game {
+  background-color: #11B5E5;
+  border: 1px solid #D7D7D7;
+  border-radius: 4px;
+  width: 225px;
+  height: 40px;
+  padding: 6px 12px;
+  display: block;
+  margin-inline: auto;
+  cursor: pointer;
+}
+
+.letter-button.correct {
+  background-color: #10A95B;
+}
+
+.letter-button.incorrect {
+  background-color: #EC5D49;
 }
