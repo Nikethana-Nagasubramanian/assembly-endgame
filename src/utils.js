@@ -2,7 +2,6 @@ import { words } from "./word";
 
 export function getRandomWord() {
     const randomWordIndex = Math.floor(Math.random() * words.length);
-    console.log(randomWordIndex)
     return words[randomWordIndex]
 }
 export function getFarewellText(language) {

@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { useState } from "react";
 import { languages } from "./languages";
 import { clsx } from "clsx";
 import { getFarewellText, getRandomWord } from "./utils";
+import { getHint } from "./ai";
 
 export default function AssemblyEndgame() {
   //State variables
   const [currentWord, setCurrentWord] = useState(() => getRandomWord());
-
-  console.log(currentWord)
   const [guessedLetters, setGuessedLetters] = useState([]);
+  const [hint, setHint] = useState();
 
   //Derived variables
   const wrongGuessCount = guessedLetters.filter(
@@ -29,10 +29,28 @@ export default function AssemblyEndgame() {
   //Static variables
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
+  const fetchHint = useCallback(async () => {
+    try {
+      const newHint = await getHint(currentWord);
+      setHint(newHint);
+      console.log('fetched hint:', newHint); // log the fresh value
+    } catch (err) {
+      console.error('Error getting hint:', err);
+      alert('Failed to fetch hint. Check console for details.');
+    }
+  }, [currentWord]);
+  
+  useEffect(() => {
+    fetchHint();
+  }, [fetchHint]);  
+
   const eachLetter = currentWord.split("").map((letter, index) => {
+    const letterClassName = clsx(
+      isGameLost && !guessedLetters.includes(letter) && "missed-letter"
+    ) 
     return (
-      <span key={index} className="each-letter">
-        {guessedLetters.includes(letter) ? letter : ""}
+      <span key={index} className={letterClassName}>
+        {(isGameOver && isGameLost ? letter : (guessedLetters.includes(letter) ? letter : ""))}
       </span>
     );
   });
@@ -73,6 +91,23 @@ export default function AssemblyEndgame() {
     );
   });
 
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if(isGameOver && isGameLost) {
+        return
+      }
+      const key = event.key.toLowerCase();
+      if (key.length === 1 && key >= "a" && key <= "z") {
+        addingGuessedLetters(key);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+  
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [addingGuessedLetters]);  
+
   function addingGuessedLetters(letter) {
     setGuessedLetters((prevLetters) =>
       prevLetters.includes(letter) ? prevLetters : [...prevLetters, letter]
@@ -89,7 +124,7 @@ export default function AssemblyEndgame() {
     if (isGameOver && isGameWon) {
       return (
         <div>
-          <h6>You Win!</h6>
+          <h5>You Win!</h5>
           <p>Well done! 🎉</p>
         </div>
       );
@@ -98,7 +133,7 @@ export default function AssemblyEndgame() {
     if (isGameOver && isGameLost) {
       return (
         <div>
-          <h6>You Lose!</h6>
+          <h5>You Lose!</h5>
           <p>Go learn Assembly now.</p>
         </div>
       );
@@ -119,13 +154,18 @@ export default function AssemblyEndgame() {
     }
   }
 
+  function resetGame() {
+    setCurrentWord(getRandomWord())
+    setGuessedLetters([])
+  }
+
   return (
     <main>
       <header>
         <h1>Assembly: Endgame</h1>
         <p>
           Guess the word in under 8 attempts to keep the programming world safe
-          from Assembly!
+          from Assembly! (If you lose, you have to learn Assembly)
         </p>
       </header>
       <section className={gameStatusClass} aria-live="polite" role="status">
@@ -133,8 +173,20 @@ export default function AssemblyEndgame() {
       </section>
       <section className="language-chips">{langMap}</section>
       <section className="guessWord">{eachLetter}</section>
+      {
+      (wrongGuessCount > 5) && 
+      <section className="hint">
+        <h3>Hint:</h3>
+        <p>{hint}</p>
+      </section>
+      }
       <section className="keyboard">{keyboardElements}</section>
-      {isGameOver && <button className="new-game">New Game</button>}
+      
+      {isGameOver && 
+      <button className="new-game"
+              onClick={() => resetGame()}
+      >New Game</button>}
+
     </main>
   );
 }
