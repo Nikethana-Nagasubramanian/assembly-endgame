@@ -1,12 +1,7 @@
-# React + Vite
+Assembly Endgame is a word-guessing game with a programming twist. Players try to guess a mystery programming-related word by clicking letter buttons. Correct guesses reveal letters in their positions, while wrong guesses cause programming languages to "die" and disappear from the world. Players must solve the word before losing all 8+ programming languages to Assembly's takeover. The game features dynamic visual feedback, conditional styling for game states (winning, losing, in-progress), and randomly selected words for replayability.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Screenshots of Endgame](src/assets/endgame%201.png)
+![Screenshots of Endgame](src/assets/endgame-hint.png)
+![Screenshots of Endgame](src/assets/endgame-lost.png)
+![Screenshots of Endgame](src/assets/endgame-won.png)
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

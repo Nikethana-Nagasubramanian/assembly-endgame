@@ -4,10 +4,13 @@ import { languages } from "./languages";
 import { clsx } from "clsx";
 import { getFarewellText, getRandomWord } from "./utils";
 import { getHint } from "./ai";
+import Confetti from "react-confetti";
+import { Analytics } from "@vercel/analytics/react"
 
 export default function AssemblyEndgame() {
   //State variables
   const [currentWord, setCurrentWord] = useState(() => getRandomWord());
+  console.log(currentWord)
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [hint, setHint] = useState();
 
@@ -33,24 +36,28 @@ export default function AssemblyEndgame() {
     try {
       const newHint = await getHint(currentWord);
       setHint(newHint);
-      console.log('fetched hint:', newHint); // log the fresh value
+      console.log("fetched hint:", newHint); // log the fresh value
     } catch (err) {
-      console.error('Error getting hint:', err);
-      alert('Failed to fetch hint. Check console for details.');
+      console.error("Error getting hint:", err);
+      alert("Failed to fetch hint. Check console for details.");
     }
   }, [currentWord]);
-  
+
   useEffect(() => {
     fetchHint();
-  }, [fetchHint]);  
+  }, [fetchHint]);
 
   const eachLetter = currentWord.split("").map((letter, index) => {
     const letterClassName = clsx(
       isGameLost && !guessedLetters.includes(letter) && "missed-letter"
-    ) 
+    );
     return (
       <span key={index} className={letterClassName}>
-        {(isGameOver && isGameLost ? letter : (guessedLetters.includes(letter) ? letter : ""))}
+        {isGameOver && isGameLost
+          ? letter
+          : guessedLetters.includes(letter)
+          ? letter
+          : ""}
       </span>
     );
   });
@@ -93,8 +100,8 @@ export default function AssemblyEndgame() {
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if(isGameOver && isGameLost) {
-        return
+      if (isGameOver && isGameLost) {
+        return;
       }
       const key = event.key.toLowerCase();
       if (key.length === 1 && key >= "a" && key <= "z") {
@@ -102,11 +109,11 @@ export default function AssemblyEndgame() {
       }
     }
     window.addEventListener("keydown", handleKeyDown);
-  
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [addingGuessedLetters]);  
+  }, [addingGuessedLetters]);
 
   function addingGuessedLetters(letter) {
     setGuessedLetters((prevLetters) =>
@@ -155,12 +162,14 @@ export default function AssemblyEndgame() {
   }
 
   function resetGame() {
-    setCurrentWord(getRandomWord())
-    setGuessedLetters([])
+    setCurrentWord(getRandomWord());
+    setGuessedLetters([]);
   }
 
   return (
     <main>
+      {isGameWon && <Confetti recycle={false} numberOfPieces={1000} />}
+      <Analytics/>
       <header>
         <h1>Assembly: Endgame</h1>
         <p>
@@ -173,20 +182,19 @@ export default function AssemblyEndgame() {
       </section>
       <section className="language-chips">{langMap}</section>
       <section className="guessWord">{eachLetter}</section>
-      {
-      (wrongGuessCount > 5) && 
-      <section className="hint">
-        <h3>Hint:</h3>
-        <p>{hint}</p>
-      </section>
-      }
+      {wrongGuessCount > 5 && (
+        <section className="hint">
+          <h3>Hint:</h3>
+          <p>{hint}</p>
+        </section>
+      )}
       <section className="keyboard">{keyboardElements}</section>
-      
-      {isGameOver && 
-      <button className="new-game"
-              onClick={() => resetGame()}
-      >New Game</button>}
 
+      {isGameOver && (
+        <button className="new-game" onClick={() => resetGame()}>
+          New Game
+        </button>
+      )}
     </main>
   );
 }
