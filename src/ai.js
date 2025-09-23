@@ -13,7 +13,7 @@ Make sure the hint is not too easy nor too difficult to crack. Don't include the
 
 export async function getHint(word) {
   try {
-    const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1/v1/chat/completions", {
+    const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
