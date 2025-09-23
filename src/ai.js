@@ -2,7 +2,9 @@ import { InferenceClient } from "@huggingface/inference";
 
 let token = import.meta.env.VITE_HF_ACCESS_TOKEN;
 
-const client = new InferenceClient(token);
+const client = new InferenceClient(token, {
+  baseUrl: "https://api-inference.huggingface.co"
+});
 
 const SYSTEM_PROMPT = `
 You are an assistant that will give hints based on the word you receive. 
