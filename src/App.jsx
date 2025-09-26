@@ -59,7 +59,7 @@ export default function AssemblyEndgame() {
           behavior: 'smooth',
           block: 'center'
         });
-      }, 100);
+      }, 1000);
     }
   }, [isGameOver]);
 
