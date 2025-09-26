@@ -329,6 +329,7 @@ span.chip.lost::before {
 button.new-game {
   background-color: #11B5E5;
   border: 1px solid #D7D7D7;
+  color: #262626;
   border-radius: 6px;
   width: 200px;
   height: 48px;

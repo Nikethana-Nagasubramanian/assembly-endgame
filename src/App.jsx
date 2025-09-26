@@ -13,6 +13,9 @@ export default function AssemblyEndgame() {
   console.log(currentWord)
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [hint, setHint] = useState();
+  
+  //Refs
+  const newGameButtonRef = useRef(null);
 
   //Derived variables
   const wrongGuessCount = guessedLetters.filter(
@@ -46,6 +49,19 @@ export default function AssemblyEndgame() {
   useEffect(() => {
     fetchHint();
   }, [fetchHint]);
+
+  // Scroll to New Game button when game ends
+  useEffect(() => {
+    if (isGameOver && newGameButtonRef.current) {
+      // Small delay to ensure the button is rendered
+      setTimeout(() => {
+        newGameButtonRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+    }
+  }, [isGameOver]);
 
   const eachLetter = currentWord.split("").map((letter, index) => {
     const letterClassName = clsx(
@@ -191,7 +207,11 @@ export default function AssemblyEndgame() {
       <section className="keyboard">{keyboardElements}</section>
 
       {isGameOver && (
-        <button className="new-game" onClick={() => resetGame()}>
+        <button 
+          ref={newGameButtonRef}
+          className="new-game" 
+          onClick={() => resetGame()}
+        >
           New Game
         </button>
       )}
