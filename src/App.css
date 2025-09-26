@@ -250,6 +250,7 @@ span.chip.lost::before {
   height: 44px;
   font-size: 1.1rem;
   background-color: #FCBA29;
+  color: #262626;
   border: 1px solid #D7D7D7;
   text-transform: capitalize;
   border-radius: 4px;
